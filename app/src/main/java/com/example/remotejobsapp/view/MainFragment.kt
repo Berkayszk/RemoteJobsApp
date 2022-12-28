@@ -29,7 +29,8 @@ class MainFragment : Fragment(R.layout.fragment_main,) {
 
     }
     private fun setUpTabBar(){
-        val adapter = FragmentPagerItemAdapter(childFragmentManager, FragmentPagerItems.with(activity).add("Jobs",RemoteJobsFragment::class.java)
+        val adapter = FragmentPagerItemAdapter(childFragmentManager, FragmentPagerItems.with(activity)
+            .add("Jobs",RemoteJobsFragment::class.java)
             .add("Search",SearchJobFragment::class.java)
             .add("Saved Jobs",SavedJobFragment::class.java)
             .create())

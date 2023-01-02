@@ -3,7 +3,7 @@ package com.example.remotejobsapp.viewmodel
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.remotejobsapp.api.RemoteJobResponse
+import com.example.remotejobsapp.api.RemoteJobApi
 import com.example.remotejobsapp.repository.RemoteJobRepository
 
 class RemoteJobViewModellFactory(

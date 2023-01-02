@@ -3,7 +3,6 @@ package com.example.remotejobsapp
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import com.example.remotejobsapp.api.RemoteJobResponse
 import com.example.remotejobsapp.databinding.ActivityMainBinding
 import com.example.remotejobsapp.repository.RemoteJobRepository
 import com.example.remotejobsapp.viewmodel.RemoteJobViewModel

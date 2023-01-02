@@ -3,8 +3,9 @@ package com.example.remotejobsapp.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.remotejobsapp.api.RemoteJobResponse
+import com.example.remotejobsapp.api.RemoteJobApi
 import com.example.remotejobsapp.api.RetrofitInstance
+import com.example.remotejobsapp.model.RemoteJobResponse
 import com.example.remotejobsapp.util.Constants.TAG
 import retrofit2.Call
 import retrofit2.Callback

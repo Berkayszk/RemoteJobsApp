@@ -35,5 +35,9 @@
             app:popUpTo="@id/jobDetailsFragment"
             app:popUpToInclusive="true"
             />
+        <argument
+            android:name="job"
+            app:argType="com.example.remotejobsapp.model.Job"
+            app:nullable="true" />
     </fragment>
 </navigation>

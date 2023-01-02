@@ -1,5 +1,9 @@
 package com.example.remotejobsapp.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Job(
 
     val candidateRequiredLocation: String?,
@@ -15,4 +19,4 @@ data class Job(
     val tags: List<String?>?,
     val title: String?,
     val url: String?
-)
+) : Parcelable

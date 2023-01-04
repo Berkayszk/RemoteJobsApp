@@ -10,6 +10,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.remotejobsapp.R
 import com.example.remotejobsapp.databinding.FragmentJobDetailsBinding
 import com.example.remotejobsapp.databinding.FragmentRemoteJobsBinding
+import com.example.remotejobsapp.model.FavoriteJob
 import com.example.remotejobsapp.model.Job
 
 class JobDetailsFragment : Fragment(R.layout.fragment_job_details) {
@@ -38,10 +39,19 @@ class JobDetailsFragment : Fragment(R.layout.fragment_job_details) {
 
         currentJob = args.job!!
 
-       setUpWebView()
+        setUpWebView()
 
+        binding.fabAddFavorite.setOnClickListener{
+            addFavJob(view)
+        }
 
-
+    }
+    private fun addFavJob(view : View){
+        val fabJob = FavoriteJob(
+            currentJob.id!!,currentJob.candidateRequiredLocation,
+            currentJob.category,currentJob.job_type,currentJob.company_logo_url,
+            currentJob.company_name,currentJob.description,currentJob.jobId,
+        )
     }
 
     private fun setUpWebView(){

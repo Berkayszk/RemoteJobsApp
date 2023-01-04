@@ -1,11 +1,15 @@
 package com.example.remotejobsapp.model
 
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
-@Parcelize
-data class Job(
+@Entity(tableName = "fav_job")
+data class FavoriteJob(
 
+    @PrimaryKey(autoGenerate = true)
+    val id :Int,
     val candidateRequiredLocation: String?,
     val category: String?,
     val company_logo: String?,
@@ -19,4 +23,4 @@ data class Job(
     val tags: List<String?>?,
     val title: String?,
     val url: String?
-) : Parcelable
+)

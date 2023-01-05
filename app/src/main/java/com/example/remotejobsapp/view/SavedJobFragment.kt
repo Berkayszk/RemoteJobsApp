@@ -1,21 +1,24 @@
 package com.example.remotejobsapp.view
 
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.remotejobsapp.MainActivity
 import com.example.remotejobsapp.R
 import com.example.remotejobsapp.adapter.FavJobAdapter
+import com.example.remotejobsapp.adapter.RemoteJobAdapter
 import com.example.remotejobsapp.databinding.FragmentSavedJobBinding
 import com.example.remotejobsapp.model.FavoriteJob
 import com.example.remotejobsapp.viewmodel.RemoteJobViewModel
 
-class SavedJobFragment : Fragment(R.layout.fragment_saved_job) {
+class SavedJobFragment : Fragment(R.layout.fragment_saved_job), FavJobAdapter.OnItemClickListener {
 
     private var _binding : FragmentSavedJobBinding? = null
     private val binding get() = _binding!!
@@ -37,7 +40,7 @@ class SavedJobFragment : Fragment(R.layout.fragment_saved_job) {
     }
 
     private fun setUpRecyclerView(){
-        favAdapter = FavJobAdapter()
+        favAdapter = FavJobAdapter(this)
 
         binding.rvJobsSaved.apply {
             layoutManager = LinearLayoutManager(activity)
@@ -61,9 +64,25 @@ class SavedJobFragment : Fragment(R.layout.fragment_saved_job) {
          }
 
     }
+    override fun onItemClick(job: FavoriteJob, view: View, position: Int) {
+        deleteJob(job)
+    }
+    private fun deleteJob(job : FavoriteJob){
+        AlertDialog.Builder(activity).apply {
+            setTitle("Delete Job")
+            setMessage("Are you sure you want to oermanently delete this job?")
+            setPositiveButton("DELETE"){_,_->
+                Toast.makeText(activity, "Job Deleted", Toast.LENGTH_SHORT).show()
+            }
+            setNegativeButton("CANCEL",null)
+        }.create().show()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
+
+
 
 }

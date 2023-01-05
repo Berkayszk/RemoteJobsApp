@@ -1,6 +1,7 @@
 package com.example.remotejobsapp.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -12,7 +13,9 @@ import com.example.remotejobsapp.model.FavoriteJob
 import com.example.remotejobsapp.model.Job
 import com.example.remotejobsapp.view.MainFragmentDirections
 
-class FavJobAdapter : RecyclerView.Adapter<FavJobAdapter.RemoteViewHolder>() {
+class FavJobAdapter constructor(
+    private val itemClick : OnItemClickListener
+): RecyclerView.Adapter<FavJobAdapter.RemoteViewHolder>() {
     inner class RemoteViewHolder(itemBinding: JobLayoutAdapterBinding): RecyclerView.ViewHolder(itemBinding.root)
 
     private var binding : JobLayoutAdapterBinding? = null
@@ -48,6 +51,9 @@ class FavJobAdapter : RecyclerView.Adapter<FavJobAdapter.RemoteViewHolder>() {
             binding?.tvJobLocation?.text = currentJob.candidateRequiredLocation
             binding?.tvJobTitle?.text = currentJob.title
             binding?.tvJobType?.text = currentJob.job_type
+
+            binding?.ibDelete?.visibility = View.VISIBLE
+
             val dateJob = currentJob.publication_date?.split("T")
             binding?.tvDate?.text = dateJob?.get(0)
         }.setOnClickListener { mView->
@@ -69,13 +75,24 @@ class FavJobAdapter : RecyclerView.Adapter<FavJobAdapter.RemoteViewHolder>() {
                 currentJob.url,
             )
 
-            // --analyze--
+            // --analyze-- favjob vs job
             val direction = MainFragmentDirections.actionMainFragmentToJobDetailsFragment(job)
             mView.findNavController().navigate(direction)
+        }
+
+        holder.itemView.apply {
+            binding?.ibDelete?.setOnClickListener{
+                itemClick.onItemClick(currentJob,binding?.ibDelete!!,position)
+            }
         }
     }
 
     override fun getItemCount(): Int {
         return differ.currentList.size
+    }
+
+    interface OnItemClickListener{
+        fun onItemClick(
+            job:FavoriteJob, view: View, position: Int)
     }
 }

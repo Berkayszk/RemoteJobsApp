@@ -7,17 +7,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebViewClient
 import androidx.navigation.fragment.navArgs
+import com.example.remotejobsapp.MainActivity
 import com.example.remotejobsapp.R
 import com.example.remotejobsapp.databinding.FragmentJobDetailsBinding
 import com.example.remotejobsapp.databinding.FragmentRemoteJobsBinding
 import com.example.remotejobsapp.model.FavoriteJob
 import com.example.remotejobsapp.model.Job
+import com.example.remotejobsapp.viewmodel.RemoteJobViewModel
+import com.google.android.material.snackbar.Snackbar
 
 class JobDetailsFragment : Fragment(R.layout.fragment_job_details) {
 
     private var _binding : FragmentJobDetailsBinding? = null
     private val binding get() = _binding!!
-
+    private lateinit var viewModel: RemoteJobViewModel
     private lateinit var currentJob : Job
     private val args : JobDetailsFragmentArgs by navArgs()
 
@@ -37,6 +40,7 @@ class JobDetailsFragment : Fragment(R.layout.fragment_job_details) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel = (activity as MainActivity).viewModel
         currentJob = args.job!!
 
         setUpWebView()
@@ -47,11 +51,23 @@ class JobDetailsFragment : Fragment(R.layout.fragment_job_details) {
 
     }
     private fun addFavJob(view : View){
-        val fabJob = FavoriteJob(
-            currentJob.id!!,currentJob.candidateRequiredLocation,
-            currentJob.category,currentJob.job_type,currentJob.company_logo_url,
-            currentJob.company_name,currentJob.description,currentJob.jobId,
+        val fabJob = FavoriteJob(0,
+            currentJob.candidateRequiredLocation,
+            currentJob.category,
+            currentJob.job_type,
+            currentJob.company_logo_url,
+            currentJob.company_name,
+            currentJob.description,
+            currentJob.jobId,
+            currentJob.job_type,
+            currentJob.title,
+            currentJob.publication_date,
+            currentJob.salary,
+            currentJob.url
+
         )
+        viewModel.addFavJob(fabJob)
+        Snackbar.make(view,"Job Saved Successfully",Snackbar.LENGTH_LONG).show()
     }
 
     private fun setUpWebView(){

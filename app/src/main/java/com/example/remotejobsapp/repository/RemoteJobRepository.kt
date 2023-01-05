@@ -47,7 +47,6 @@ class RemoteJobRepository(private val db: FavoriteJobDatabase ) {
 
     suspend fun addFavoriteJob(job : FavoriteJob) = db.getFavJobDao().addFavoriteJob(job)
     suspend fun deleteFavJob(job : FavoriteJob) = db.getFavJobDao().deleteFavJob(job)
-
-    fun getAllFavJobs() = db.getFavJobDao()
+    fun getAllFavJobs() = db.getFavJobDao().getAllFavJob()
 
 }

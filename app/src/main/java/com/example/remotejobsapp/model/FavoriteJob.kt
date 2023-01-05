@@ -20,7 +20,6 @@ data class FavoriteJob(
     val job_type: String?,
     val publication_date: String?,
     val salary: String?,
-    val tags: List<String?>?,
     val title: String?,
     val url: String?
 )

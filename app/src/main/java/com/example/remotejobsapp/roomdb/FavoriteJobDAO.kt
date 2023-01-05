@@ -15,7 +15,7 @@ interface FavoriteJobDAO {
     suspend fun addFavoriteJob(job : FavoriteJob)
 
     @Query("SELECT * FROM fav_job ORDER BY id DESC")
-    fun getAllFavJob() : LiveData<FavoriteJob>
+    fun getAllFavJob() : LiveData<List<FavoriteJob>>
 
     @Delete
     suspend fun deleteFavJob(job: FavoriteJob)

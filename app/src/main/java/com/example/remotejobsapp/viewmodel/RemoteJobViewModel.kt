@@ -21,4 +21,9 @@ class RemoteJobViewModel (
     }
     fun getAllFavJob() = remoteJobRepository.getAllFavJobs()
 
+    fun searchRemoteJob(query : String?) = remoteJobRepository.searchJobResponse(query)
+
+    fun searchResult() = remoteJobRepository.searchJobResult()
+
+
 }

@@ -3,7 +3,6 @@ package com.example.remotejobsapp.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.remotejobsapp.api.RemoteJobApi
 import com.example.remotejobsapp.api.RetrofitInstance
 import com.example.remotejobsapp.model.FavoriteJob
 import com.example.remotejobsapp.model.RemoteJobResponse
@@ -15,15 +14,17 @@ import retrofit2.Response
 
 class RemoteJobRepository(private val db: FavoriteJobDatabase ) {
 
-    private val remotoJobService = RetrofitInstance.apiService
+    private val remoteJobService = RetrofitInstance.apiService
     private val remoteJobResponseLiveData: MutableLiveData<RemoteJobResponse> = MutableLiveData()
+    private val searchJobResponseLiveData: MutableLiveData<RemoteJobResponse> = MutableLiveData()
+
 
     init {
         getRemoteJobResponse()
     }
     
     private fun getRemoteJobResponse(){
-        remotoJobService.getRemoteJobResponse().enqueue(
+        remoteJobService.getRemoteJobResponse().enqueue(
             object : Callback<RemoteJobResponse> {
                 override fun onResponse(
                     call: Call<RemoteJobResponse>,
@@ -39,6 +40,28 @@ class RemoteJobRepository(private val db: FavoriteJobDatabase ) {
 
             }
         )
+    }
+
+    fun searchJobResponse(query : String?){
+        remoteJobService.searchJob(query).enqueue(
+            object : Callback<RemoteJobResponse>{
+                override fun onResponse(
+                    call: Call<RemoteJobResponse>,
+                    response: Response<RemoteJobResponse>
+                ) {
+                    searchJobResponseLiveData.postValue(response.body())
+                }
+
+                override fun onFailure(call: Call<RemoteJobResponse>, t: Throwable) {
+                    searchJobResponseLiveData.postValue(null)
+                }
+
+            }
+        )
+    }
+
+    fun searchJobResult() : LiveData<RemoteJobResponse> {
+        return searchJobResponseLiveData
     }
 
     fun remoteJobResult() : LiveData<RemoteJobResponse>{

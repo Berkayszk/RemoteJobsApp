@@ -1,13 +1,16 @@
 package com.example.remotejobsapp.view
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.remotejobsapp.MainActivity
 import com.example.remotejobsapp.R
 import com.example.remotejobsapp.adapter.RemoteJobAdapter
@@ -15,16 +18,13 @@ import com.example.remotejobsapp.databinding.FragmentRemoteJobsBinding
 import com.example.remotejobsapp.util.Constants
 import com.example.remotejobsapp.viewmodel.RemoteJobViewModel
 
-class RemoteJobsFragment : Fragment(R.layout.fragment_remote_jobs) {
+class RemoteJobsFragment : Fragment(R.layout.fragment_remote_jobs), SwipeRefreshLayout.OnRefreshListener {
 
     private var _binding: FragmentRemoteJobsBinding? = null
     private val binding get() = _binding!!
     lateinit var viewModel : RemoteJobViewModel
     private lateinit var  remoteJobAdapter: RemoteJobAdapter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private lateinit var swipeLayout : SwipeRefreshLayout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,6 +32,19 @@ class RemoteJobsFragment : Fragment(R.layout.fragment_remote_jobs) {
     ): View {
         _binding = FragmentRemoteJobsBinding.inflate(inflater,container,false)
         return binding.root
+
+        swipeLayout = binding.swipeContainer
+        swipeLayout.setOnRefreshListener(this)
+        swipeLayout.setColorSchemeColors(
+            Color.GREEN,Color.RED,
+            Color.BLUE,Color.DKGRAY
+        )
+
+        swipeLayout.post{
+            swipeLayout.isRefreshing = true
+            setUpRecyclerView()
+        }
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -61,18 +74,28 @@ class RemoteJobsFragment : Fragment(R.layout.fragment_remote_jobs) {
             viewModel.remoteJobResult().observe(viewLifecycleOwner, {remoteJob->
                 if (remoteJob !=null){
                     remoteJobAdapter.differ.submitList(remoteJob.jobs)
+                    swipeLayout.isRefreshing = false
+
                 }
             })
+        }
+        else {
+            Toast.makeText(activity, "No Internet Connection", Toast.LENGTH_SHORT).show()
+            swipeLayout.isRefreshing = false
         }
 
 
     }
 
-
+    override fun onRefresh() {
+        setUpRecyclerView()
+    }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
+
+
 
 }

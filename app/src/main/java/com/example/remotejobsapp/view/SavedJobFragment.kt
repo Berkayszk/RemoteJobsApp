@@ -28,7 +28,7 @@ class SavedJobFragment : Fragment(R.layout.fragment_saved_job), FavJobAdapter.On
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentSavedJobBinding.inflate(inflater,container,false)
         return binding.root
     }

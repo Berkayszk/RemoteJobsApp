@@ -31,7 +31,7 @@ class JobDetailsFragment : Fragment(R.layout.fragment_job_details) {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentJobDetailsBinding.inflate(inflater,container,false)
         return binding.root
     }

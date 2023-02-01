@@ -12,6 +12,7 @@ import com.example.remotejobsapp.MainActivity
 import com.example.remotejobsapp.R
 import com.example.remotejobsapp.adapter.RemoteJobAdapter
 import com.example.remotejobsapp.databinding.FragmentRemoteJobsBinding
+import com.example.remotejobsapp.util.Constants
 import com.example.remotejobsapp.viewmodel.RemoteJobViewModel
 
 class RemoteJobsFragment : Fragment(R.layout.fragment_remote_jobs) {
@@ -56,12 +57,15 @@ class RemoteJobsFragment : Fragment(R.layout.fragment_remote_jobs) {
 
     private fun fetchinData(){
 
+        if (Constants.checkInternetConnection(requireContext())){
+            viewModel.remoteJobResult().observe(viewLifecycleOwner, {remoteJob->
+                if (remoteJob !=null){
+                    remoteJobAdapter.differ.submitList(remoteJob.jobs)
+                }
+            })
+        }
 
-        viewModel.remoteJobResult().observe(viewLifecycleOwner, {remoteJob->
-            if (remoteJob !=null){
-                remoteJobAdapter.differ.submitList(remoteJob.jobs)
-            }
-        })
+
     }
 
 

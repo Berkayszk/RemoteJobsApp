@@ -18,20 +18,28 @@ import com.example.remotejobsapp.databinding.FragmentSavedJobBinding
 import com.example.remotejobsapp.model.FavoriteJob
 import com.example.remotejobsapp.viewmodel.RemoteJobViewModel
 
-class SavedJobFragment : Fragment(R.layout.fragment_saved_job), FavJobAdapter.OnItemClickListener {
+class SavedJobFragment : Fragment(R.layout.fragment_saved_job),
+    FavJobAdapter.OnItemClickListener {
 
-    private var _binding : FragmentSavedJobBinding? = null
+    private var _binding: FragmentSavedJobBinding? = null
     private val binding get() = _binding!!
-    private lateinit var viewModel : RemoteJobViewModel
-    private lateinit var favAdapter : FavJobAdapter
+    private lateinit var viewModel: RemoteJobViewModel
+    private lateinit var jobAdapter: FavJobAdapter
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentSavedJobBinding.inflate(inflater,container,false)
+
+        _binding = FragmentSavedJobBinding.inflate(
+            inflater,
+            container,
+            false
+        )
         return binding.root
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,50 +47,59 @@ class SavedJobFragment : Fragment(R.layout.fragment_saved_job), FavJobAdapter.On
         setUpRecyclerView()
     }
 
-    private fun setUpRecyclerView(){
-        favAdapter = FavJobAdapter(this)
+    private fun setUpRecyclerView() {
+        jobAdapter = FavJobAdapter(this)
 
         binding.rvJobsSaved.apply {
+
             layoutManager = LinearLayoutManager(activity)
             setHasFixedSize(true)
-            addItemDecoration(object : DividerItemDecoration(activity,LinearLayout.VERTICAL){})
-            adapter = favAdapter
+            addItemDecoration(
+                object : DividerItemDecoration(
+                    activity, LinearLayout.VERTICAL) {})
+            adapter = jobAdapter
         }
-        viewModel.getAllFavJob().observe(viewLifecycleOwner, {favJob->
-            favAdapter.differ.submitList(favJob)
-            updateUI(favJob)
+
+        viewModel.getAllJob().observe(viewLifecycleOwner, { FavoriteJob ->
+            jobAdapter.differ.submitList(FavoriteJob)
+            updateUI(FavoriteJob)
         })
     }
 
-    private fun updateUI(job: List<FavoriteJob>){
-         if (job.isNotEmpty()){
-             binding.rvJobsSaved.visibility = View.VISIBLE
-             binding.cardNoAvailable.visibility = View.GONE
-         }else{
-             binding.rvJobsSaved.visibility = View.GONE
-             binding.cardNoAvailable.visibility = View.VISIBLE
-         }
+    private fun updateUI(list: List<FavoriteJob>) {
 
+        if (list.isNotEmpty()) {
+            binding.rvJobsSaved.visibility = View.VISIBLE
+            binding.cardNoAvailable.visibility = View.GONE
+        } else {
+            binding.rvJobsSaved.visibility = View.GONE
+            binding.cardNoAvailable.visibility = View.VISIBLE
+        }
     }
+
+
     override fun onItemClick(job: FavoriteJob, view: View, position: Int) {
         deleteJob(job)
     }
-    private fun deleteJob(job : FavoriteJob){
+
+
+    private fun deleteJob(job: FavoriteJob) {
+
         AlertDialog.Builder(activity).apply {
             setTitle("Delete Job")
-            setMessage("Are you sure you want to oermanently delete this job?")
-            setPositiveButton("DELETE"){_,_->
-                Toast.makeText(activity, "Job Deleted", Toast.LENGTH_SHORT).show()
+            setMessage("Are you sure you want to permanently delete this job?")
+            setPositiveButton("DELETE") { _, _ ->
+                viewModel.deleteJob(job)
+                Toast.makeText(activity,"Job deleted", Toast.LENGTH_SHORT).show()
             }
-            setNegativeButton("CANCEL",null)
+            setNegativeButton("CANCEL", null)
         }.create().show()
+
     }
+
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
-
-
-
 }

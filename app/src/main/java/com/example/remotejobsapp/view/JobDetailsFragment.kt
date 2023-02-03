@@ -19,21 +19,23 @@ import com.google.android.material.snackbar.Snackbar
 
 class JobDetailsFragment : Fragment(R.layout.fragment_job_details) {
 
-    private var _binding : FragmentJobDetailsBinding? = null
+    private var _binding: FragmentJobDetailsBinding? = null
     private val binding get() = _binding!!
+    private val args: JobDetailsFragmentArgs by navArgs()
+    private lateinit var currentJob: Job
     private lateinit var viewModel: RemoteJobViewModel
-    private lateinit var currentJob : Job
-    private val args : JobDetailsFragmentArgs by navArgs()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentJobDetailsBinding.inflate(inflater,container,false)
+
+        _binding = FragmentJobDetailsBinding.inflate(
+            inflater,
+            container,
+            false
+        )
+
         return binding.root
     }
 
@@ -46,56 +48,43 @@ class JobDetailsFragment : Fragment(R.layout.fragment_job_details) {
 
         setUpWebView()
 
-        binding.fabAddFavorite.setOnClickListener{
-            addFavJob(view)
+        binding.fabAddFavorite.setOnClickListener {
+            addJobToFavorite(view)
         }
 
     }
-    private fun addFavJob(view : View){
-        val fabJob = FavoriteJob(0,
-            currentJob.candidateRequiredLocation,
-            currentJob.category,
-            currentJob.job_type,
-            currentJob.company_logo_url,
-            currentJob.company_name,
-            currentJob.description,
-            currentJob.jobId,
-            currentJob.job_type,
-            currentJob.title,
-            currentJob.publication_date,
-            currentJob.salary,
-            currentJob.url
 
-        )
-        viewModel.addFavJob(fabJob)
-        Snackbar.make(view,"Job Saved Successfully",Snackbar.LENGTH_LONG).show()
-    }
-
-    private fun setUpWebView(){
+    private fun setUpWebView() {
         binding.webView.apply {
             webViewClient = WebViewClient()
-            currentJob?.url?.let { loadUrl(it) }
+            currentJob.url?.let { loadUrl(it) }
         }
 
-        val settings = binding.webView.settings
-        settings.javaScriptEnabled = true
-        settings.cacheMode = WebSettings.LOAD_DEFAULT
-        settings.setSupportZoom(false)
-        settings.builtInZoomControls = false
-        settings.displayZoomControls = false
-        settings.textZoom = 100
-        settings.blockNetworkImage = false
-        settings.loadsImagesAutomatically = true
+        binding.webView.settings.apply {
+            javaScriptEnabled = true
+            //setAppCacheEnabled(true)
+            cacheMode = WebSettings.LOAD_DEFAULT
+            setSupportZoom(false)
+            builtInZoomControls = false
+            displayZoomControls = false
+            textZoom = 100
+            blockNetworkImage = false
+            loadsImagesAutomatically = true
+        }
     }
 
-
-
-
-
-
+    private fun addJobToFavorite(view: View) {
+        val job = FavoriteJob(0,currentJob.candidateRequiredLocation,currentJob.category,currentJob.company_logo
+        ,currentJob.company_logo_url,currentJob.company_name,currentJob.description,currentJob.id,currentJob.job_type,
+        currentJob.publication_date,currentJob.salary,currentJob.title,currentJob.url)
+        viewModel.insertJob(job)
+        Snackbar.make(view, "Job saved successfully", Snackbar.LENGTH_SHORT).show()
+    }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
+
+
 }

@@ -12,7 +12,7 @@ data class Job(
     val company_logo_url: String?,
     val company_name: String?,
     val description: String?,
-    val jobId: Int?,
+    val id: Int?,
     val job_type: String?,
     val publication_date: String?,
     val salary: String?,

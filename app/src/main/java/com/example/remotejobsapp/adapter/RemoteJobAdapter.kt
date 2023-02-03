@@ -44,9 +44,9 @@ class RemoteJobAdapter : RecyclerView.Adapter<RemoteJobAdapter.RemoteViewHolder>
                 .into(binding?.ivCompanyLogo!!)
 
             binding?.tvCompanyName?.text = currentJob.company_name
-            binding?.tvJobLocation?.text = currentJob.candidateRequiredLocation
             binding?.tvJobTitle?.text = currentJob.title
             binding?.tvJobType?.text = currentJob.job_type
+            binding?.tvJobLocation?.text = currentJob.candidateRequiredLocation
             val dateJob = currentJob.publication_date?.split("T")
             binding?.tvDate?.text = dateJob?.get(0)
         }.setOnClickListener { mView->

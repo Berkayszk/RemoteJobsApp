@@ -7,23 +7,27 @@ import com.example.remotejobsapp.model.FavoriteJob
 import com.example.remotejobsapp.repository.RemoteJobRepository
 import kotlinx.coroutines.launch
 
-class RemoteJobViewModel (
+class RemoteJobViewModel(
     app: Application,
     private val remoteJobRepository: RemoteJobRepository
-    ): AndroidViewModel(app){
-        fun remoteJobResult() = remoteJobRepository.remoteJobResult()
+) : AndroidViewModel(app) {
 
-    fun addFavJob(job : FavoriteJob) = viewModelScope.launch {
-        remoteJobRepository.addFavoriteJob(job)
+    fun remoteJobResult() =
+        remoteJobRepository.getRemoteJobResponseLiveData()
+
+    fun searchJob(query: String?) =
+        remoteJobRepository.searchRemoteJob(query)
+
+    fun searchResult() = remoteJobRepository.getSearchJobResponseLiveData()
+
+    fun insertJob(job: FavoriteJob) = viewModelScope.launch {
+        remoteJobRepository.insertJob(job)
     }
-    fun deleteJob(job : FavoriteJob) = viewModelScope.launch {
-        remoteJobRepository.deleteFavJob(job)
+
+    fun deleteJob(job: FavoriteJob) = viewModelScope.launch {
+        remoteJobRepository.deleteJob(job)
     }
-    fun getAllFavJob() = remoteJobRepository.getAllFavJobs()
 
-    fun searchRemoteJob(query : String?) = remoteJobRepository.searchJobResponse(query)
-
-    fun searchResult() = remoteJobRepository.searchJobResult()
-
+    fun getAllJob() = remoteJobRepository.getAllJobs()
 
 }

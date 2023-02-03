@@ -21,58 +21,67 @@ import kotlinx.coroutines.launch
 
 class SearchJobFragment : Fragment(R.layout.fragment_search_job) {
 
-    private var _binding : FragmentSearchJobBinding? =null
+    private var _binding: FragmentSearchJobBinding? = null
     private val binding get() = _binding!!
-    private lateinit var viewModel : RemoteJobViewModel
-    private lateinit var jobAdapter : RemoteJobAdapter
+    private lateinit var viewModel: RemoteJobViewModel
+    private lateinit var jobAdapter: RemoteJobAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
-        _binding = FragmentSearchJobBinding.inflate(inflater,container,false)
+
+        _binding = FragmentSearchJobBinding.inflate(
+            inflater,
+            container,
+            false
+        )
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = (activity as MainActivity).viewModel
-        if(Constants.checkInternetConnection(requireContext())){
+
+        if (Constants.isNetworkAvailable(requireContext())) {
             searchJob()
-            setUpRecyclerView()
-        }else{
-            Toast.makeText(activity, "No Internet Connection", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(activity,"No internet connection", Toast.LENGTH_SHORT).show()
         }
-
-
     }
 
-    private fun searchJob(){
-        var job: Job? = null //coroutines job
-        binding.etSearch.addTextChangedListener {text ->
+
+    private fun searchJob() {
+        var job: Job? = null
+        binding.etSearch.addTextChangedListener { editable ->
             job?.cancel()
             job = MainScope().launch {
                 delay(500L)
-                text?.let {
-                    if (text.toString().isNotEmpty()){
-                        viewModel.searchRemoteJob(text.toString())
+                editable?.let {
+                    if (editable.toString().isNotEmpty()) {
+                        viewModel.searchJob(editable.toString())
                     }
                 }
             }
         }
+        setUpRecyclerView()
     }
-    private fun setUpRecyclerView(){
+
+
+    private fun setUpRecyclerView() {
         jobAdapter = RemoteJobAdapter()
         binding.rvSearchJobs.apply {
             layoutManager = LinearLayoutManager(activity)
             setHasFixedSize(true)
             adapter = jobAdapter
         }
-        viewModel.searchResult().observe(viewLifecycleOwner, {remoteJob->
+
+        viewModel.searchResult().observe(viewLifecycleOwner, { remoteJob ->
             jobAdapter.differ.submitList(remoteJob.jobs)
         })
+
     }
+
 
     override fun onDestroy() {
         super.onDestroy()

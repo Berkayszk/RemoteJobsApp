@@ -9,7 +9,7 @@ import com.example.remotejobsapp.model.FavoriteJob
 @Database(entities = [FavoriteJob::class], version = 1)
 abstract class FavoriteJobDatabase : RoomDatabase() {
 
-    abstract fun getFavJobDao() : FavoriteJobDAO
+    abstract fun getRemoteJobDao(): FavoriteJobDAO
 
     companion object {
         @Volatile
@@ -17,13 +17,14 @@ abstract class FavoriteJobDatabase : RoomDatabase() {
         private val LOCK = Any()
 
         operator fun invoke(context: Context) = instance ?: synchronized(LOCK) {
-            instance ?: createDatabase(context).also { instance = it}
+            instance ?: createDatabase(context).also { instance = it }
         }
+
         private fun createDatabase(context: Context) =
-            Room.databaseBuilder(context.applicationContext,FavoriteJobDatabase::class.java,"fav_job_db").build()
-
-
+            Room.databaseBuilder(
+                context.applicationContext,
+                FavoriteJobDatabase::class.java,
+                "jav_job"
+            ).build()
     }
-
-
 }

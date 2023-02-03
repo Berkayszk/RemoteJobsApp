@@ -7,11 +7,13 @@ import retrofit2.http.Query
 
 interface RemoteJobApi {
 
-    @GET("remote-jobs?limit=5") //normal remote-jobs, remote-jobs?limit=5 for picture
+    @GET("remote-jobs?limit=35") //normal remote-jobs, remote-jobs?limit=5 for picture
     fun getRemoteJobResponse(): Call<RemoteJobResponse>
 
     @GET("remote-jobs")
     fun searchJob(@Query("search") query: String?) : Call<RemoteJobResponse>
+
+
 
 
 }
